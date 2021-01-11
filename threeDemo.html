@@ -43,6 +43,11 @@
         display: none;
     }
 
+    .con .fl {
+        max-height: 150px;
+        overflow-y: scroll;
+    }
+
     .con ul {
         display: none;
         width: 180px;
@@ -70,6 +75,27 @@
         color: #409EFF;
         background-color: #F5F7FA;
     }
+
+    /* 修改滚动条样式 */
+    .con .fl::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* 修改 滚动条的 下面 的 样式 */
+    .con .fl::-webkit-scrollbar-track {
+        background-color: #eee;
+        -webkit-border-radius: 2em;
+        -moz-border-radius: 2em;
+        border-radius: 2em;
+    }
+
+    /* 修改 滑块 */
+    .con .fl::-webkit-scrollbar-thumb {
+        background-color: #bbb;
+        -webkit-border-radius: 2em;
+        -moz-border-radius: 2em;
+        border-radius: 2em;
+    }
 </style>
 
 <body>
@@ -80,10 +106,16 @@
                 <span class="iconfont icon-xiala"></span>
             </div>
             <div class="con clearfix" flag="false">
-                <ul class="shengUl fl">
-                </ul>
-                <ul class="shiUl fl"></ul>
-                <ul class="quUl fl"></ul>
+                <div class="fl">
+                    <ul class="shengUl ">
+                    </ul>
+                </div>
+                <div class="fl">
+                    <ul class="shiUl"></ul>
+                </div>
+                <div class="fl">
+                    <ul class="quUl"></ul>
+                </div>
             </div>
         </div>
 
@@ -167,7 +199,22 @@
                         ]
                     }
                 ]
+            },
+            {
+                "id": 10003,
+                "name": "河北省",
+                "child": []
+            },
+            {
+                "id": 10004,
+                "name": "辽宁省",
+                "child": [{
+                    "id": 100018,
+                    "name": "沈阳市",
+                    "child": []
+                }, ]
             }
+
         ]
 
 
@@ -197,45 +244,67 @@
             // console.log('aaa', li);
             $('.shengUl').html(li)
         }
-        // 市 渲染// 点击省
+        // 市 渲染// 点击省 // 点击第一级
         $('.shengUl li').click(function () {
             $('.shiUl').show()
             $(".quUl").hide()
             var shiLi = ''
             $(this).addClass("active").siblings().removeClass("active")
             //$(this).attr('num')可取到当前所选值对应的索引
-            for (var i = 0; i < city01[$(this).attr('num')].child.length; i++) {
-                var shiNum = i
-                var shiText = city01[$(this).attr('num')].child[i].name
-                var shiId = city01[$(this).attr('num')].child[i].id
+            if (city01[$(this).attr('num')].child.length != 0) {
+                for (var i = 0; i < city01[$(this).attr('num')].child.length; i++) {
+                    var shiNum = i
+                    var shiText = city01[$(this).attr('num')].child[i].name
+                    var shiId = city01[$(this).attr('num')].child[i].id
 
-                shiLi += `
+                    shiLi += `
                     <li value="${shiId}" num="${shiNum}">${shiText}</li>
                 `
-                // console.log('市', shiLi);
-                $('.shiUl').html(shiLi)
+                    // console.log('市', shiLi);
+                    $('.shiUl').html(shiLi)
+                }
+            } else {
+                console.log('quNum', $(this).attr('num')) // 索引
+                console.log('quId', $(this).val()) // id值
+                console.log('quText', $(this).text()) // 内容
+                $(".con ul").hide()
+                $('.con').hide()
+                $('.con').attr('flag', false)
+                $('.input input').val($(this).text())
             }
+
             nowShengIndex = $(this).attr('num');
             // console.log('nowShengIndex', nowShengIndex)
         })
-        // 区 渲染// 点击市
+        // 区 渲染// 点击市 // 点击第二级
         $(document).on('click', '.shiUl li', function () {
             // console.log('object', $(this).attr('num'))
             $(".quUl").show()
             $(this).addClass("active").siblings().removeClass("active")
             var quLi = ''
-            for (var i = 0; i < city01[nowShengIndex].child[$(this).attr('num')].child.length; i++) {
-                var quNum = i
-                var quText = city01[nowShengIndex].child[$(this).attr('num')].child[i].name
-                var quId = city01[nowShengIndex].child[$(this).attr('num')].child[i].id
+            if (city01[nowShengIndex].child[$(this).attr('num')].child.length != 0) {
+                for (var i = 0; i < city01[nowShengIndex].child[$(this).attr('num')].child.length; i++) {
+                    var quNum = i
+                    var quText = city01[nowShengIndex].child[$(this).attr('num')].child[i].name
+                    var quId = city01[nowShengIndex].child[$(this).attr('num')].child[i].id
 
-                quLi += `
+                    quLi += `
                     <li value="${quId}" num="${quNum}">${quText}</li>
                 `
-                $('.quUl').html(quLi)
+                    $('.quUl').html(quLi)
+                }
+            } else {
+                console.log('quNum', $(this).attr('num')) // 索引
+                console.log('quId', $(this).val()) // id值
+                console.log('quText', $(this).text()) // 内容
+                $(".con ul").hide()
+                $('.con').hide()
+                $('.con').attr('flag', false)
+                $('.input input').val($(this).text())
             }
+
         })
-        // 点击选中
+        // 点击第三级点击选中
         $(document).on('click', '.quUl li', function () {
             console.log('quNum', $(this).attr('num')) // 索引
             console.log('quId', $(this).val()) // id值
