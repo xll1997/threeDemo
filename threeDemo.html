@@ -11,7 +11,8 @@
 
 <style>
     .demo {
-        height: 500px;
+        position: relative;
+        /* height: 500px; */
         padding: 50px;
     }
 
@@ -39,6 +40,7 @@
     }
 
     .con {
+        position: absolute;
         padding-top: 10px;
         display: none;
     }
@@ -99,44 +101,26 @@
 </style>
 
 <body>
-    <div>
-        <div class="demo">
-            <div class="input">
-                <input type="text" placeholder="请选择">
-                <span class="iconfont icon-xiala"></span>
+    <div class="demo">
+        <div class="input">
+            <input type="text" placeholder="请选择">
+            <span class="iconfont icon-xiala"></span>
+        </div>
+        <div class="con clearfix" flag="false">
+            <div class="fl">
+                <ul class="shengUl ">
+                </ul>
             </div>
-            <div class="con clearfix" flag="false">
-                <div class="fl">
-                    <ul class="shengUl ">
-                    </ul>
-                </div>
-                <div class="fl">
-                    <ul class="shiUl"></ul>
-                </div>
-                <div class="fl">
-                    <ul class="quUl"></ul>
-                </div>
+            <div class="fl">
+                <ul class="shiUl"></ul>
+            </div>
+            <div class="fl">
+                <ul class="quUl"></ul>
             </div>
         </div>
-
-        <!-- <div>
-            省：<select class="sheng">
-                <option>
-                    -请选择-
-                </option>
-            </select>
-            市：<select class="shi">
-                <option>
-                    -请选择-
-                </option>
-            </select>
-            区：<select class="qu">
-                <option>
-                    -请选择-
-                </option>
-            </select>
-        </div> -->
     </div>
+
+
     <script>
         var city01 = [{
                 "id": 10001,
@@ -244,13 +228,12 @@
             // console.log('aaa', li);
             $('.shengUl').html(li)
         }
-        // 市 渲染// 点击省 // 点击第一级
-        $('.shengUl li').click(function () {
+        // 市 渲染// 鼠标进入省 // 鼠标进入第一级
+        $('.shengUl li').mouseenter(function () {
             $('.shiUl').show()
             $(".quUl").hide()
             var shiLi = ''
             $(this).addClass("active").siblings().removeClass("active")
-            //$(this).attr('num')可取到当前所选值对应的索引
             if (city01[$(this).attr('num')].child.length != 0) {
                 for (var i = 0; i < city01[$(this).attr('num')].child.length; i++) {
                     var shiNum = i
@@ -264,21 +247,31 @@
                     $('.shiUl').html(shiLi)
                 }
             } else {
-                console.log('quNum', $(this).attr('num')) // 索引
-                console.log('quId', $(this).val()) // id值
-                console.log('quText', $(this).text()) // 内容
-                $(".con ul").hide()
-                $('.con').hide()
-                $('.con').attr('flag', false)
-                $('.input input').val($(this).text())
+                $('.shiUl').html()
+                $('.shiUl').hide()
             }
+        })
+        // 市 渲染// 点击省 // 点击第一级
+        $('.shengUl li').click(function () {
+            $('.shiUl').show()
+            $(".quUl").hide()
+            var shiLi = ''
+            $(this).addClass("active").siblings().removeClass("active")
+            //$(this).attr('num')可取到当前所选值对应的索引
+
+            console.log('quNum', $(this).attr('num')) // 索引
+            console.log('quId', $(this).val()) // id值
+            console.log('quText', $(this).text()) // 内容
+            $(".con ul").hide()
+            $('.con').hide()
+            $('.con').attr('flag', false)
+            $('.input input').val($(this).text())
 
             nowShengIndex = $(this).attr('num');
             // console.log('nowShengIndex', nowShengIndex)
         })
-        // 区 渲染// 点击市 // 点击第二级
-        $(document).on('click', '.shiUl li', function () {
-            // console.log('object', $(this).attr('num'))
+        // 区 渲染// 鼠标进入市 // 鼠标进入第二级
+        $(document).on('mouseenter', '.shiUl li', function () {
             $(".quUl").show()
             $(this).addClass("active").siblings().removeClass("active")
             var quLi = ''
@@ -294,14 +287,24 @@
                     $('.quUl').html(quLi)
                 }
             } else {
-                console.log('quNum', $(this).attr('num')) // 索引
-                console.log('quId', $(this).val()) // id值
-                console.log('quText', $(this).text()) // 内容
-                $(".con ul").hide()
-                $('.con').hide()
-                $('.con').attr('flag', false)
-                $('.input input').val($(this).text())
+                $('.quUl').html()
+                $('.quUl').hide()
             }
+        })
+        
+        // 区 渲染// 点击市 // 点击第二级
+        $(document).on('click', '.shiUl li', function () {
+            // console.log('object', $(this).attr('num'))
+            $(".quUl").show()
+            $(this).addClass("active").siblings().removeClass("active")
+            var quLi = ''
+            console.log('quNum', $(this).attr('num')) // 索引
+            console.log('quId', $(this).val()) // id值
+            console.log('quText', $(this).text()) // 内容
+            $(".con ul").hide()
+            $('.con').hide()
+            $('.con').attr('flag', false)
+            $('.input input').val($(this).text())
 
         })
         // 点击第三级点击选中
@@ -315,100 +318,10 @@
             $('.con').attr('flag', false)
             // $('.input input').val($(this).text())
         })
+        // $(document).on('mouseleave', '.quUl', function () {
+        //     $(".quUl").hide()
+        // })
     </script>
-    <!-- <script>
-        var city = [{
-                "id": 10001,
-                "name": "陕西省",
-                "child": [{
-                        "id": 100011,
-                        "name": "西安市",
-                        "child": [{
-                                "id": 100011,
-                                "name": "高新区"
-                            },
-                            {
-                                "id": 100011,
-                                "name": "未央区"
-                            }
-                        ]
-                    },
-                    {
-                        "id": 100012,
-                        "name": "宝鸡市",
-                        "child": [{
-                                "id": 100011,
-                                "name": "高新区"
-                            },
-                            {
-                                "id": 100011,
-                                "name": "成仓区"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "id": 10002,
-                "name": "甘肃省",
-                "child": [{
-                        "id": 100021,
-                        "name": "兰州市",
-                        "child": [{
-                                "id": 100021,
-                                "name": "兰州区1"
-                            },
-                            {
-                                "id": 100021,
-                                "name": "兰州区2"
-                            }
-                        ]
-                    },
-                    {
-                        "id": 100022,
-                        "name": "酒泉市",
-                        "child": [{
-                                "id": 100021,
-                                "name": "酒泉区1"
-                            },
-                            {
-                                "id": 100021,
-                                "name": "酒泉区2"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-        var sheng = document.getElementsByClassName("sheng")[0];
-        var shi = document.getElementsByClassName("shi")[0];
-        var qu = document.getElementsByClassName("qu")[0];
-        var nowShengIndex = 0;
-        for (var i = 0; i < city.length; i++) {
-            var optEle = new Option(city[i].name, i);
-            console.log('aaa', optEle.innerHTML);
-            sheng.appendChild(optEle)
-        }
-        sheng.onchange = function () {
-            shi.options.length = 1;
-            qu.options.length = 1;
-            //this.value可取到当前所选值对应的索引
-            for (var i = 0; i < city[this.value].child.length; i++) {
-                var optEle = new Option(city[this.value].child[i].name, i);
-                shi.appendChild(optEle)
-            }
-            nowShengIndex = this.value;
-
-        };
-        shi.onchange = function () {
-            qu.options.length = 1;
-            console.log(qu);
-            for (var i = 0; i < city[nowShengIndex].child[this.value].child.length; i++) {
-                var optEle = new Option(city[nowShengIndex].child[this.value].child[i].name, i);
-                qu.appendChild(optEle)
-            }
-        }
-    </script> -->
 </body>
 
 </html>
